@@ -46,17 +46,12 @@ body {
 }
 
 /* line 46, ../sass/screen.scss */
-.recipe-details {
-  color: black;
-}
-
-/* line 50, ../sass/screen.scss */
 .ingredients-header {
   text-align: center;
   color: gray;
 }
 
-/* line 55, ../sass/screen.scss */
+/* line 51, ../sass/screen.scss */
 .new-recipe {
   background-color: white;
   color: #2D8440;
@@ -64,12 +59,12 @@ body {
   margin: 15px 15px 15px 5.6%;
   border: none;
 }
-/* line 61, ../sass/screen.scss */
+/* line 57, ../sass/screen.scss */
 .new-recipe:hover {
   cursor: pointer;
 }
 
-/* line 66, ../sass/screen.scss */
+/* line 62, ../sass/screen.scss */
 .ingredient {
   width: 90%;
   margin: 0 auto;
@@ -77,7 +72,7 @@ body {
   padding: 10px;
 }
 
-/* line 91, ../sass/screen.scss */
+/* line 87, ../sass/screen.scss */
 .edit {
   border: none;
   color: white;
@@ -85,12 +80,12 @@ body {
   margin: 20px 10px 0 0;
   background-color: #2D8440;
 }
-/* line 83, ../sass/screen.scss */
+/* line 79, ../sass/screen.scss */
 .edit:hover {
   cursor: pointer;
 }
 
-/* line 91, ../sass/screen.scss */
+/* line 87, ../sass/screen.scss */
 .delete {
   border: none;
   color: white;
@@ -98,18 +93,18 @@ body {
   margin: 20px 10px 0 0;
   background-color: #AE3C3C;
 }
-/* line 83, ../sass/screen.scss */
+/* line 79, ../sass/screen.scss */
 .delete:hover {
   cursor: pointer;
 }
 
-/* line 97, ../sass/screen.scss */
+/* line 93, ../sass/screen.scss */
 .footer {
   margin-top: 30px;
   font-size: 0.7em;
   color: gray;
 }
-/* line 101, ../sass/screen.scss */
+/* line 97, ../sass/screen.scss */
 .footer a {
   color: gray;
 }
