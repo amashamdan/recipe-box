@@ -99,12 +99,51 @@ body {
 }
 
 /* line 93, ../sass/screen.scss */
+.layer {
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  background-color: black;
+  opacity: 0.8;
+  top: 0;
+  left: 0;
+  z-index: 1;
+}
+
+/* line 104, ../sass/screen.scss */
+.new-recipe-message {
+  text-align: center;
+  position: fixed;
+  width: 100%;
+  left: 0;
+  background-color: white;
+  color: gray;
+  z-index: 2;
+}
+/* line 112, ../sass/screen.scss */
+.new-recipe-message h1 {
+  margin: 15px;
+}
+/* line 115, ../sass/screen.scss */
+.new-recipe-message input {
+  margin: 10px 0 25px 0;
+  width: 40%;
+  height: 35px;
+}
+/* line 120, ../sass/screen.scss */
+.new-recipe-message button {
+  margin: 5px 10px 35px 10px;
+  width: 110px;
+  height: 25px;
+}
+
+/* line 127, ../sass/screen.scss */
 .footer {
   margin-top: 30px;
   font-size: 0.7em;
   color: gray;
 }
-/* line 97, ../sass/screen.scss */
+/* line 131, ../sass/screen.scss */
 .footer a {
   color: gray;
 }

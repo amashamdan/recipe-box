@@ -90,6 +90,40 @@ $buttons: edit delete;
 
 }
 
+.layer {
+	width: 100%;
+	height: 100%;
+	position: fixed;
+	background-color: black;
+	opacity: 0.8;
+	top: 0;
+	left: 0;
+	z-index: 1;
+}
+
+.new-recipe-message {
+	text-align: center;
+	position: fixed;
+	width: 100%;
+	left: 0;
+	background-color: white;
+	color: gray;
+	z-index: 2;
+	h1 {
+		margin: 15px;
+	}
+	input {
+		margin: 10px 0 25px 0;
+		width: 40%;
+		height: 35px;
+	}
+	button {
+		margin: 5px 10px 35px 10px;
+		width: 110px;
+		height: 25px;
+	}
+}
+
 .footer {
 	margin-top: 30px;
 	font-size: 0.7em;
