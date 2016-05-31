@@ -3,6 +3,7 @@
  * Import this file using the following HTML or equivalent:
  * <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css" /> */
 $box-background-color: #2D8440;
+$delte-color: #AE3C3C;
 
 body {
 	font-family: 'Raleway', sans-serif;
@@ -34,10 +35,21 @@ body {
 	li {
 		padding: 10px;
 		border: solid 5px $box-background-color;
+	}
+	span {
 		&:hover {
 			cursor: pointer;
 		}
 	}
+}
+
+.recipe-details {
+	color: black;
+}
+
+.ingredients-header {
+	text-align: center;
+	color: gray;
 }
 
 .new-recipe {
@@ -49,6 +61,37 @@ body {
 	&:hover {
 		cursor: pointer;
 	}
+}
+
+.ingredient {
+	width: 90%;
+	margin: 0 auto;
+	border-bottom: 1px solid gray;
+	padding: 10px;
+}
+
+@mixin recipe-buttons($button) {
+	border: none;
+	color: white;
+	padding: 5px;
+	margin: 20px 10px 0 0;
+	@if $button == delete {
+		background-color: $delte-color;
+	} @else {
+		background-color: $box-background-color;
+	}
+	&:hover {
+		cursor: pointer;
+	}
+}
+
+$buttons: edit delete;
+
+@each $button in $buttons {
+	.#{$button} {
+		@include recipe-buttons($button);
+	}
+
 }
 
 .footer {
