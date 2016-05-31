@@ -1,6 +1,6 @@
-/* Box component, it is the parent component. It includes a header, a child component RecipeList and a button. */
+/* Box component, it is the parent component. It includes a header, child components RecipeList and NewRecipeForm, and a button. */
 var Box = React.createClass({
-	/* Initially the page will show two sample recipes. Each recipe object has a key, name and a list of ingredients. */
+	/* Initially the page will show two sample recipes. Each recipe object has a key, name and a list of ingredients. newForm controls the diplay of the new recipe form once the New Recipe button is clicked. initally set to false. */
 	getInitialState: function() {
 		return ({recipes: [{
 								key: 0,
@@ -11,15 +11,20 @@ var Box = React.createClass({
 								key: 1,
 								name: "Sample2",
 								ingredients: ["Meat", "Sauce"]
-							}]});
+							}],
+				newForm: false});
+	},
+	newClick: function() {
+		this.setState({newForm: true});
 	},
 	render: function() {
-		/* The render method returns the header, calls RecipeList and adds a 'New Recipe' button at the bottom of the box. */
+		/* The render method returns the header, calls RecipeList, calls NewRecipeForm and adds a 'New Recipe' button at the bottom of the box. */
 		return (
 			<div className = "box">
 				<h2 className="main-header">Available recipes</h2>
 				<RecipeList recipes={this.state.recipes}/>
-				<button className="new-recipe">New Recipe</button>
+				<button className="new-recipe" onClick={this.newClick}>New Recipe</button>
+				<NewRecipeForm status={this.state.newForm}/>
 			</div>			
 		);
 	}
@@ -80,6 +85,31 @@ var RecipeDetails = React.createClass({
 				</div>
 			);
 		/* If status is false, an empty div is returned. */
+		} else {
+			return (<div></div>);
+		}
+	}
+})
+
+/* The NewRecipeForm component. Displayed when New Recipe button is clicked. It has two inputs, a save button and a cancel button. */
+var NewRecipeForm = React.createClass({
+	render: function() {
+		/* The diplay is controlled with status props. intially set to false. The "layer div is just a black background with some transparency. It has to be in its own div because of opcaity issues. A child cannot override its parent opcaity. So new-recipe-message is displayed above "layer" by controlling the z-index. */
+		if (this.props.status) {
+			return (
+				<div>
+					<div className="layer"></div>
+					<form className="new-recipe-message">
+						<h4>Enter new recipe details</h4>
+						<label for="recipe-name">Recipe Name</label><br/>
+						<input className="recipe-name" placeholder="Enter recipe name..." /><br/>
+						<label for="recipe-ingredients">Ingredients</label><br/>
+						<input id="recipe-ingredients" placeholder="Enter recipe ingredients..." /><br/>
+						<button className="save">Save recipe</button>
+						<button className="cancel">Cancel</button>
+					</form>
+				</div>
+			);
 		} else {
 			return (<div></div>);
 		}
