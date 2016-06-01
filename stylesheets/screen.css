@@ -22,7 +22,7 @@ body {
 
 /* line 23, ../sass/screen.scss */
 .box {
-  background-color: #2D8440;
+  background-color: #246868;
   color: white;
 }
 
@@ -33,12 +33,12 @@ body {
   padding: 0;
   list-style: none;
   background-color: white;
-  color: #2D8440;
+  color: #246868;
 }
 /* line 35, ../sass/screen.scss */
 .recipe-list li {
   padding: 10px;
-  border: solid 5px #2D8440;
+  border: solid 5px #246868;
 }
 /* line 40, ../sass/screen.scss */
 .recipe-list span:hover {
@@ -54,7 +54,7 @@ body {
 /* line 51, ../sass/screen.scss */
 .new-recipe {
   background-color: white;
-  color: #2D8440;
+  color: #246868;
   padding: 10px;
   margin: 15px 15px 15px 5.6%;
   border: none;
@@ -69,7 +69,7 @@ body {
   width: 90%;
   margin: 0 auto;
   border-bottom: 1px solid gray;
-  padding: 10px;
+  padding: 10px 10px 2px 10px;
 }
 
 /* line 87, ../sass/screen.scss */
@@ -78,7 +78,7 @@ body {
   color: white;
   padding: 5px;
   margin: 20px 10px 0 0;
-  background-color: #2D8440;
+  background-color: #246868;
 }
 /* line 79, ../sass/screen.scss */
 .edit:hover {
@@ -115,35 +115,38 @@ body {
   text-align: center;
   position: fixed;
   width: 100%;
+  height: 40%;
   left: 0;
+  top: 25%;
   background-color: white;
   color: gray;
   z-index: 2;
 }
-/* line 112, ../sass/screen.scss */
+/* line 114, ../sass/screen.scss */
 .new-recipe-message h1 {
   margin: 15px;
 }
-/* line 115, ../sass/screen.scss */
+/* line 117, ../sass/screen.scss */
 .new-recipe-message input {
   margin: 10px 0 25px 0;
   width: 40%;
   height: 35px;
+  padding: 0 0 0 10px;
 }
-/* line 120, ../sass/screen.scss */
+/* line 123, ../sass/screen.scss */
 .new-recipe-message button {
   margin: 5px 10px 35px 10px;
   width: 110px;
   height: 25px;
 }
 
-/* line 127, ../sass/screen.scss */
+/* line 130, ../sass/screen.scss */
 .footer {
   margin-top: 30px;
   font-size: 0.7em;
   color: gray;
 }
-/* line 131, ../sass/screen.scss */
+/* line 134, ../sass/screen.scss */
 .footer a {
   color: gray;
 }
