@@ -4,13 +4,13 @@ var Box = React.createClass({
 	getInitialState: function() {
 		return ({recipes: [{
 								key: 0,
-								name: "Nice Sample",
-								ingredients: ["Rice", "Chicken"]
+								name: "Nutella Cake",
+								ingredients: ["Nutella", "Eggs"]
 							}, 
 							{
 								key: 1,
-								name: "Great Sample",
-								ingredients: ["Meat", "Sauce"]
+								name: "White Chocolate Pretzels",
+								ingredients: ["White Chocolate Melts", "Pretzels"]
 							}],
 				newForm: false,
 				c: 2});
