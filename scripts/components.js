@@ -4,18 +4,31 @@ var Box = React.createClass({
 	getInitialState: function() {
 		return ({recipes: [{
 								key: 0,
-								name: "Sample1",
+								name: "Nice Sample",
 								ingredients: ["Rice", "Chicken"]
 							}, 
 							{
 								key: 1,
-								name: "Sample2",
+								name: "Great Sample",
 								ingredients: ["Meat", "Sauce"]
 							}],
 				newForm: false});
 	},
+	/* Handler for clicking New Recipe button, the state of the new recipe from is set to true to render the new recipe form. */
 	newClick: function() {
 		this.setState({newForm: true});
+	},
+	/* Handler for submitting the new recipe form. It takes two arguments, recipe from and recipe's ingredients. */
+	newRecipeSubmit: function(name, ingredients) {
+		/* Since this.state.recipes is an array, this.setState cannot be used to add the new recipe. Below is the work around. */
+		var recipes = this.state.recipes;
+		var newRecipes = recipes.concat([{key: recipes.length , name: name, ingredients: ingredients}]);
+		/* new recipe from is closed. */
+		this.setState({recipes: newRecipes, newForm: false});
+	},
+	/* Handler for clicking cancel button on the new recipe form. */
+	cancelNewRecipe: function() {
+		this.setState({newForm: false});
 	},
 	render: function() {
 		/* The render method returns the header, calls RecipeList, calls NewRecipeForm and adds a 'New Recipe' button at the bottom of the box. */
@@ -24,7 +37,7 @@ var Box = React.createClass({
 				<h2 className="main-header">Available recipes</h2>
 				<RecipeList recipes={this.state.recipes}/>
 				<button className="new-recipe" onClick={this.newClick}>New Recipe</button>
-				<NewRecipeForm status={this.state.newForm}/>
+				<NewRecipeForm status={this.state.newForm} onCancel={this.cancelNewRecipe} onSubmit={this.newRecipeSubmit}/>
 			</div>			
 		);
 	}
@@ -93,20 +106,44 @@ var RecipeDetails = React.createClass({
 
 /* The NewRecipeForm component. Displayed when New Recipe button is clicked. It has two inputs, a save button and a cancel button. */
 var NewRecipeForm = React.createClass({
+	/* form submit handler. eventually it'll call submit handler in Box to display information, this function passes the relevant information to Box. */
+	submit: function(e) {
+		e.preventDefault();
+		/* The if statement ensures form doesn't get submitted if recipe name or ingredients are missing. A message is displayed asking user to enter inormation. */
+		if (!$(".recipe-name").val() || !$(".recipe-ingredients").val()){
+			alert("Please fill all fields.")
+		} else {
+			/* Entered text in ingredients fiels is saved into ingredientsArray. */
+			var ingredientsArray = $(".recipe-ingredients").val();
+			/* Ingredients should be seperated by commas, they're seperated and stored as individual elements back into ingredientsArray. */
+			ingredientsArray = ingredientsArray.split(",");
+			/* White spaces at the end or beginning are removed. */
+			for (var ingredient in ingredientsArray) {
+				ingredientsArray[ingredient] = ingredientsArray[ingredient].trim();
+			}
+			/* submit handler in Box is called. */
+			this.props.onSubmit($(".recipe-name").val(), ingredientsArray);
+		}
+
+	},
+	handleCancel: function(e) {
+		e.preventDefault();
+		this.props.onCancel();
+	},
 	render: function() {
 		/* The diplay is controlled with status props. intially set to false. The "layer div is just a black background with some transparency. It has to be in its own div because of opcaity issues. A child cannot override its parent opcaity. So new-recipe-message is displayed above "layer" by controlling the z-index. */
 		if (this.props.status) {
 			return (
 				<div>
 					<div className="layer"></div>
-					<form className="new-recipe-message">
+					<form className="new-recipe-message" onSubmit={this.submit}>
 						<h4>Enter new recipe details</h4>
 						<label for="recipe-name">Recipe Name</label><br/>
 						<input className="recipe-name" placeholder="Enter recipe name..." /><br/>
 						<label for="recipe-ingredients">Ingredients</label><br/>
-						<input id="recipe-ingredients" placeholder="Enter recipe ingredients..." /><br/>
+						<input className="recipe-ingredients" placeholder="Enter recipe ingredients..." /><br/>
 						<button className="save">Save recipe</button>
-						<button className="cancel">Cancel</button>
+						<button className="cancel" onClick={this.handleCancel}>Cancel</button>
 					</form>
 				</div>
 			);
