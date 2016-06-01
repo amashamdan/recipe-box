@@ -30,12 +30,18 @@ var Box = React.createClass({
 	cancelNewRecipe: function() {
 		this.setState({newForm: false});
 	},
+	/* Handler for editing a recipe. it removes the edited recipe using its key and replaces it with the nwe recipe. */
+	editSubmit: function(key, newName, newIngredients) {
+		var recipes = this.state.recipes;
+		recipes.splice(key, 1, {key: key, name: newName, ingredients: newIngredients});
+		this.setState({recipes: recipes});
+	},
 	render: function() {
 		/* The render method returns the header, calls RecipeList, calls NewRecipeForm and adds a 'New Recipe' button at the bottom of the box. */
 		return (
 			<div className = "box">
 				<h2 className="main-header">Available recipes</h2>
-				<RecipeList recipes={this.state.recipes}/>
+				<RecipeList recipes={this.state.recipes} editSubmit={this.editSubmit}/>
 				<button className="new-recipe" onClick={this.newClick}>New Recipe</button>
 				<NewRecipeForm status={this.state.newForm} onCancel={this.cancelNewRecipe} onSubmit={this.newRecipeSubmit}/>
 			</div>			
@@ -58,17 +64,23 @@ var RecipeList = React.createClass({
 		/* recipe object is passed as function, it's key is found and used to negate the state. [recipe key] used because if we want to set a varialbe as a property, square brackets must be used. */
 		this.setState({[recipe.key]: !this.state[recipe.key]});
 	},
+	/* Recieves edited recipe details and passes them to editSubmit handler in Box. */
+	editSubmit: function(key, newName, newIngredients) {
+		this.props.editSubmit(key, newName, newIngredients);
+	},
 	render: function() {
 		/* passing this.handleClick directly to onClick props results in error... seems like scoping error. So it's stored in handler varialbe outside of the return statement..*/
 		var handler = this.handleClick;
 		/* Same issue with this.state. */
 		var status = this.state;
+		/* Same issue again. */
+		var editSubmitHandler = this.editSubmit;
 		/* For each recipe, a list item is created using map function. All items are stored in recipeElements array. a call to RecipeDetails is placed to render the details of the recipe if its status is true. the status is passed with the call to RecipeDtails */ 
 		var recipeElements = this.props.recipes.map(function(recipe){
 			/* Bind returns a function with a body same as the function it's bound to. this is resolved to the first argument.
 			So when you call it with onfilechange.bind(null, playsound), it creates and returns a new function, always receiving playsound as first argument and using global context (Because null is used as context), just like all regular functions use global context */
 			return (
-				<li key={recipe.key}><span onClick={handler.bind(null, recipe)}>{recipe.name}</span><RecipeDetails status={status[recipe.key]} recipe={recipe} /></li>
+				<li key={recipe.key}><span onClick={handler.bind(null, recipe)}>{recipe.name}</span><RecipeDetails editSubmit={editSubmitHandler} status={status[recipe.key]} recipe={recipe} /></li>
 			);
 		});
 		/* The unordered list is rendered, the list items are the contents of recipeElemnts array. */
@@ -82,6 +94,23 @@ var RecipeList = React.createClass({
 
 /* RecipeDetails components. It includes details of a recipe, and two buttons, one to edit the recipe and one to delete it. */
 var RecipeDetails = React.createClass({
+	/* editForm controls the display of the edit form. Initially set to false. */
+	getInitialState: function() {
+		return ({editForm: false});
+	},
+	/* Edit button click handler, it sets the state of editForm to true which dislays the edit form on display. */
+	handleEdit: function() {
+		this.setState({editForm: true});
+	},
+	/* Cancel button handler, all it does is hide the edit form. */
+	onCancel: function() {
+		this.setState({editForm: false});	
+	},
+	/* Form submission handler, editForm is set to false to hide the form, it recieves edited recipe details and passes them to editSubmit handler is RecipeList. */
+	onSubmit: function(key, newName, newIngredients) {
+		this.setState({editForm: false});
+		this.props.editSubmit(key, newName, newIngredients);
+	},
 	render: function() {
 		/* The ingredients of a recipe are put in seperate divs. */
 		var ingredients = this.props.recipe.ingredients.map(function(ingredient) {
@@ -93,8 +122,9 @@ var RecipeDetails = React.createClass({
 				<div className="recipe-details" id={this.props.recipe.name}>
 					<h4 className="ingredients-header">Ingredients</h4>
 					{ingredients}
-					<button className="edit">Edit</button>
+					<button className="edit" onClick={this.handleEdit}>Edit</button>
 					<button className="delete">Delete</button>
+					<EditRecipeForm status={this.state.editForm} recipe={this.props.recipe} onCancel={this.onCancel} onSubmit={this.onSubmit}/>
 				</div>
 			);
 		/* If status is false, an empty div is returned. */
@@ -142,6 +172,49 @@ var NewRecipeForm = React.createClass({
 						<input className="recipe-name" placeholder="Enter recipe name..." /><br/>
 						<label for="recipe-ingredients">Ingredients</label><br/>
 						<input className="recipe-ingredients" placeholder="Enter recipe ingredients..." /><br/>
+						<button className="save">Save recipe</button>
+						<button className="cancel" onClick={this.handleCancel}>Cancel</button>
+					</form>
+				</div>
+			);
+		} else {
+			return (<div></div>);
+		}
+	}
+})
+
+/* In this component, a recipe is edited. It renders two input fields loaded with current recipe name and ingredients, and save and cancel button. */
+var EditRecipeForm = React.createClass({
+	/* Cancel button handler, prevents reloading, and calls onCancel handler in RecipeDetails to set the state of editForm to false. */
+	handleCancel: function(e) {
+		e.preventDefault();
+		this.props.onCancel();
+	},
+	/* Form submission handler. */
+	submit: function(e) {
+		e.preventDefault();
+		/* Edited name and ingredients are saved, ingredients are trimmed at both ends. */
+		var newName = $(".edit-recipe-name").val();
+		var newIngredients = $(".edit-recipe-ingredients").val();
+		newIngredients = newIngredients.split(",");
+		for (var ingredient in newIngredients) {
+			newIngredients[ingredient] = newIngredients[ingredient].trim();
+		}
+		/* The new details are passed to RecipeDetails onSubmit handler. These information are passed from here to RecipeDetails to RecipeList to Box. */
+		this.props.onSubmit(this.props.recipe.key, newName, newIngredients);
+	},
+	/* Render method, first checks to see the state is true, if not, the form is not displayed. */
+	render: function() {
+		if (this.props.status) {
+			return (
+				<div>
+					<div className="layer"></div>
+					<form className="new-recipe-message" onSubmit={this.submit}>
+						<h4>Edit recipe details</h4>
+						<label for="edit-recipe-name">Recipe Name</label><br/>
+						<input className="edit-recipe-name" defaultValue={this.props.recipe.name}></input><br/>
+						<label for="edit-recipe-ingredients">Ingredients</label><br/>
+						<input className="edit-recipe-ingredients" defaultValue={this.props.recipe.ingredients}/><br/>
 						<button className="save">Save recipe</button>
 						<button className="cancel" onClick={this.handleCancel}>Cancel</button>
 					</form>
