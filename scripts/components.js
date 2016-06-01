@@ -36,12 +36,18 @@ var Box = React.createClass({
 		recipes.splice(key, 1, {key: key, name: newName, ingredients: newIngredients});
 		this.setState({recipes: recipes});
 	},
+	/* Handler for deleting a recipe. it removes the edited recipe using its key. */
+	deleteHandler: function(key) {
+		var recipes = this.state.recipes;
+		recipes.splice(key, 1);
+		this.setState({recipes: recipes});
+	},
 	render: function() {
 		/* The render method returns the header, calls RecipeList, calls NewRecipeForm and adds a 'New Recipe' button at the bottom of the box. */
 		return (
 			<div className = "box">
 				<h2 className="main-header">Available recipes</h2>
-				<RecipeList recipes={this.state.recipes} editSubmit={this.editSubmit}/>
+				<RecipeList recipes={this.state.recipes} editSubmit={this.editSubmit} onDelete={this.deleteHandler}/>
 				<button className="new-recipe" onClick={this.newClick}>New Recipe</button>
 				<NewRecipeForm status={this.state.newForm} onCancel={this.cancelNewRecipe} onSubmit={this.newRecipeSubmit}/>
 			</div>			
@@ -68,6 +74,10 @@ var RecipeList = React.createClass({
 	editSubmit: function(key, newName, newIngredients) {
 		this.props.editSubmit(key, newName, newIngredients);
 	},
+	/* Recieves the key of the recipe to delete and passes it on to the deleteHandler of Box. */
+	deleteHandler: function(key) {
+		this.props.onDelete(key);
+	},
 	render: function() {
 		/* passing this.handleClick directly to onClick props results in error... seems like scoping error. So it's stored in handler varialbe outside of the return statement..*/
 		var handler = this.handleClick;
@@ -75,12 +85,14 @@ var RecipeList = React.createClass({
 		var status = this.state;
 		/* Same issue again. */
 		var editSubmitHandler = this.editSubmit;
+		/* Same issue again */
+		var deleteHandler = this.deleteHandler;
 		/* For each recipe, a list item is created using map function. All items are stored in recipeElements array. a call to RecipeDetails is placed to render the details of the recipe if its status is true. the status is passed with the call to RecipeDtails */ 
 		var recipeElements = this.props.recipes.map(function(recipe){
 			/* Bind returns a function with a body same as the function it's bound to. this is resolved to the first argument.
 			So when you call it with onfilechange.bind(null, playsound), it creates and returns a new function, always receiving playsound as first argument and using global context (Because null is used as context), just like all regular functions use global context */
 			return (
-				<li key={recipe.key}><span onClick={handler.bind(null, recipe)}>{recipe.name}</span><RecipeDetails editSubmit={editSubmitHandler} status={status[recipe.key]} recipe={recipe} /></li>
+				<li key={recipe.key}><span onClick={handler.bind(null, recipe)}>{recipe.name}</span><RecipeDetails editSubmit={editSubmitHandler} status={status[recipe.key]} onDelete={deleteHandler} recipe={recipe} /></li>
 			);
 		});
 		/* The unordered list is rendered, the list items are the contents of recipeElemnts array. */
@@ -111,6 +123,10 @@ var RecipeDetails = React.createClass({
 		this.setState({editForm: false});
 		this.props.editSubmit(key, newName, newIngredients);
 	},
+	/* handler for delete button click. It calls deleteHandler in RecipeList passing the key of the clicked recipe. */
+	deleteHandler: function() {
+		this.props.onDelete(this.props.recipe.key);
+	},
 	render: function() {
 		/* The ingredients of a recipe are put in seperate divs. */
 		var ingredients = this.props.recipe.ingredients.map(function(ingredient) {
@@ -123,7 +139,7 @@ var RecipeDetails = React.createClass({
 					<h4 className="ingredients-header">Ingredients</h4>
 					{ingredients}
 					<button className="edit" onClick={this.handleEdit}>Edit</button>
-					<button className="delete">Delete</button>
+					<button className="delete" onClick={this.deleteHandler}>Delete</button>
 					<EditRecipeForm status={this.state.editForm} recipe={this.props.recipe} onCancel={this.onCancel} onSubmit={this.onSubmit}/>
 				</div>
 			);
