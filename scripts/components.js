@@ -1,6 +1,6 @@
 /* Box component, it is the parent component. It includes a header, child components RecipeList and NewRecipeForm, and a button. */
 var Box = React.createClass({
-	/* Initially the page will show two sample recipes. Each recipe object has a key, name and a list of ingredients. newForm controls the diplay of the new recipe form once the New Recipe button is clicked. initally set to false. */
+	/* Initially the page will show two sample recipes. Each recipe object has a key, name and a list of ingredients. newForm controls the diplay of the new recipe form once the New Recipe button is clicked. initally set to false. c control the key assigned to each recipe object, since we're starting with 2 recipes (keys 0 and 1), c is intially set to 2. */
 	getInitialState: function() {
 		return ({recipes: [{
 								key: 0,
@@ -12,7 +12,8 @@ var Box = React.createClass({
 								name: "Great Sample",
 								ingredients: ["Meat", "Sauce"]
 							}],
-				newForm: false});
+				newForm: false,
+				c: 2});
 	},
 	/* Handler for clicking New Recipe button, the state of the new recipe from is set to true to render the new recipe form. */
 	newClick: function() {
@@ -22,9 +23,11 @@ var Box = React.createClass({
 	newRecipeSubmit: function(name, ingredients) {
 		/* Since this.state.recipes is an array, this.setState cannot be used to add the new recipe. Below is the work around. */
 		var recipes = this.state.recipes;
-		var newRecipes = recipes.concat([{key: recipes.length , name: name, ingredients: ingredients}]);
-		/* new recipe from is closed. */
-		this.setState({recipes: newRecipes, newForm: false});
+		var newRecipes = recipes.concat([{key: this.state.c , name: name, ingredients: ingredients}]);
+		/* newC holds the new value of c (the key of the next recipe) */
+		var newC = this.state.c + 1;
+		/* new recipe from is closed, is incremented */
+		this.setState({recipes: newRecipes, newForm: false, c: newC});
 	},
 	/* Handler for clicking cancel button on the new recipe form. */
 	cancelNewRecipe: function() {
@@ -39,7 +42,14 @@ var Box = React.createClass({
 	/* Handler for deleting a recipe. it removes the edited recipe using its key. */
 	deleteHandler: function(key) {
 		var recipes = this.state.recipes;
-		recipes.splice(key, 1);
+		/* The index of the recipe in recipes is found by looping through recipes and locationg which recipe has a matching key. recipes is spliced using index.
+		Didn't use recipes.splice(key, 1), because let's say we have thee recipes 0, 1, 2. If we delete 1, recipe 2 will then have index 1 in the array, if we try to delete it, it won't be removed because key is 2 and there is no index 2. */
+		for (var recipe in recipes) {
+			if (recipes[recipe].key === key){
+				var index = recipe;
+			}
+		}
+		recipes.splice(index, 1);
 		this.setState({recipes: recipes});
 	},
 	render: function() {
