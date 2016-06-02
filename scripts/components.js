@@ -79,13 +79,22 @@ var Box = React.createClass({
 		this.saveData(recipes);
 		this.setState({recipes: recipes});
 	},
+	/* reset method restores the page to its default state. */
+	reset: function() {
+		/* Removes anything stored in localStorage */
+		localStorage.removeItem('key');
+		localStorage.removeItem('recipes');
+		/* reloads the page (instead, the state could be set to the default state which would force a render without reloading.) */
+		location.reload();
+	},
 	render: function() {
-		/* The render method returns the header, calls RecipeList, calls NewRecipeForm and adds a 'New Recipe' button at the bottom of the box. */
+		/* The render method returns the header, calls RecipeList, calls NewRecipeForm and adds a 'New Recipe' and 'Reset' buttons at the bottom of the box. */
 		return (
 			<div className = "box">
 				<h2 className="main-header">Available recipes</h2>
 				<RecipeList recipes={this.state.recipes} editSubmit={this.editSubmit} onDelete={this.deleteHandler}/>
 				<button className="new-recipe" onClick={this.newClick}>New Recipe</button>
+				<button className="reset" onClick={this.reset}>Reset</button>
 				<NewRecipeForm status={this.state.newForm} onCancel={this.cancelNewRecipe} onSubmit={this.newRecipeSubmit}/>
 			</div>			
 		);
