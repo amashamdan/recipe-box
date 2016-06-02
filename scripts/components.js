@@ -48,7 +48,14 @@ var Box = React.createClass({
 	/* Handler for editing a recipe. it removes the edited recipe using its key and replaces it with the nwe recipe. Changes are saved to local storage.*/
 	editSubmit: function(key, newName, newIngredients) {
 		var recipes = this.state.recipes;
-		recipes.splice(key, 1, {key: key, name: newName, ingredients: newIngredients});
+		/* The index of the recipe in recipes is found by looping through recipes and locationg which recipe has a matching key. recipes is spliced using index.
+		Didn't use recipes.splice(key, 1), because let's say we have thee recipes 0, 1, 2. If we delete 1, recipe 2 will then have index 1 in the array, so the key doesn't really refer to the index in recipes. */
+		for (var recipe in recipes) {
+			if (recipes[recipe].key === key){
+				var index = recipe;
+			}
+		}
+		recipes.splice(index, 1, {key: key, name: newName, ingredients: newIngredients});
 		/* Call to saveData method to store the new recipes object.  */
 		this.saveData(recipes);
 		this.setState({recipes: recipes});
