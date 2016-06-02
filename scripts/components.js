@@ -98,14 +98,24 @@ var RecipeList = React.createClass({
 	getInitialState: function() {
 		var initialState = {};
 		for (var recipe in this.props.recipes) {
-			initialState[recipe] = false;
+			initialState[this.props.recipes[recipe]['key']] = false;
 		}
 		return initialState;
 	},
 	handleClick: function(recipe) {
-		/* jQuery is the easiest way to show and hide elements. But states are used in this page to control rendering of details. $("#" + name).fadeToggle(); this command could've been used.*/
-		/* recipe object is passed as function, it's key is found and used to negate the state. [recipe key] used because if we want to set a varialbe as a property, square brackets must be used. */
-		this.setState({[recipe.key]: !this.state[recipe.key]});
+		/* jQuery is the easiest way to show and hide elements. But states are used in this page to control rendering of details. $("#" + name).fadeToggle(); this command could've been used.
+		The state of the clicked recipe should be negated, it's retrieved using the key.*/
+		var clicked = this.state[recipe.key];
+		/* When a recipe is clicked, all other recipes should be collapsed. The for loop set all states false. */
+		var currentState = {};
+		for (var element in this.props.recipes) {
+			currentState[this.props.recipes[element]['key']] = false;
+		}
+		/* In the next two lines the clicked recipe's key is used to find the corresponding state in currentState and set it to ture. Finally, state is set to current state. */
+		var index = recipe.key;
+		/* The clicked recipes state is negated. */
+		currentState[index] = !clicked;
+		this.setState(currentState);
 	},
 	/* Recieves edited recipe details and passes them to editSubmit handler in Box. */
 	editSubmit: function(key, newName, newIngredients) {
