@@ -2,7 +2,14 @@
 var Box = React.createClass({
 	/* Initially the page will show two sample recipes. Each recipe object has a key, name and a list of ingredients. newForm controls the diplay of the new recipe form once the New Recipe button is clicked. initally set to false. c control the key assigned to each recipe object, since we're starting with 2 recipes (keys 0 and 1), c is intially set to 2. */
 	getInitialState: function() {
-		return ({recipes: [{
+		/* The if statements checks if data are stored in local storage. If so, recipes and keys counter are restored, else, the default recipes are loaded. */
+		if (localStorage.recipes) {
+			var recipes = localStorage.getItem('recipes');
+			recipes = JSON.parse(recipes);
+			var counter = localStorage.getItem('key');
+			counter = JSON.parse(counter);
+		} else {
+			var recipes = [{
 								key: 0,
 								name: "Nutella Cake",
 								ingredients: ["Nutella", "Eggs"]
@@ -11,9 +18,12 @@ var Box = React.createClass({
 								key: 1,
 								name: "White Chocolate Pretzels",
 								ingredients: ["White Chocolate Melts", "Pretzels"]
-							}],
+							}];
+			var counter = 2; 
+		}
+		return ({recipes: recipes,
 				newForm: false,
-				c: 2});
+				c: counter});
 	},
 	/* Handler for clicking New Recipe button, the state of the new recipe from is set to true to render the new recipe form. */
 	newClick: function() {
@@ -26,6 +36,8 @@ var Box = React.createClass({
 		var newRecipes = recipes.concat([{key: this.state.c , name: name, ingredients: ingredients}]);
 		/* newC holds the new value of c (the key of the next recipe) */
 		var newC = this.state.c + 1;
+		/* A call to save data method. The new key and new recipes are saved. */
+		this.saveData(newRecipes, newC);
 		/* new recipe from is closed, is incremented */
 		this.setState({recipes: newRecipes, newForm: false, c: newC});
 	},
@@ -33,11 +45,18 @@ var Box = React.createClass({
 	cancelNewRecipe: function() {
 		this.setState({newForm: false});
 	},
-	/* Handler for editing a recipe. it removes the edited recipe using its key and replaces it with the nwe recipe. */
+	/* Handler for editing a recipe. it removes the edited recipe using its key and replaces it with the nwe recipe. Changes are saved to local storage.*/
 	editSubmit: function(key, newName, newIngredients) {
 		var recipes = this.state.recipes;
 		recipes.splice(key, 1, {key: key, name: newName, ingredients: newIngredients});
+		/* Call to saveData method to store the new recipes object.  */
+		this.saveData(recipes);
 		this.setState({recipes: recipes});
+	},
+	/* saveData method, it accepts a key and a recipes array. Editing a form and deleting a recipe doesn't affect the key, so a default value is set to the current key value. Remember object are stringified before being saved, and then parsed upon retrieval. */
+	saveData: function(recipes, key = this.state.c){
+		localStorage.setItem('recipes', JSON.stringify(recipes));
+		localStorage.setItem('key', JSON.stringify(key));
 	},
 	/* Handler for deleting a recipe. it removes the edited recipe using its key. */
 	deleteHandler: function(key) {
@@ -50,6 +69,7 @@ var Box = React.createClass({
 			}
 		}
 		recipes.splice(index, 1);
+		this.saveData(recipes);
 		this.setState({recipes: recipes});
 	},
 	render: function() {
