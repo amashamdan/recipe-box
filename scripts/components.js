@@ -242,7 +242,7 @@ var NewRecipeForm = React.createClass({
 						<h4>Enter new recipe details</h4>
 						<label for="recipe-name">Recipe Name</label><br/>
 						<input className="recipe-name" placeholder="Enter recipe name..." /><br/>
-						<label for="recipe-ingredients">Ingredients</label><br/>
+						<label for="recipe-ingredients">Ingredients (Seperate by commas)</label><br/>
 						<input className="recipe-ingredients" placeholder="Enter recipe ingredients..." /><br/>
 						<button className="save">Save recipe</button>
 						<button className="cancel" onClick={this.handleCancel}>Cancel</button>
@@ -285,7 +285,7 @@ var EditRecipeForm = React.createClass({
 						<h4>Edit recipe details</h4>
 						<label for="edit-recipe-name">Recipe Name</label><br/>
 						<input className="edit-recipe-name" defaultValue={this.props.recipe.name}></input><br/>
-						<label for="edit-recipe-ingredients">Ingredients</label><br/>
+						<label for="edit-recipe-ingredients">Ingredients (Seperate by commas)</label><br/>
 						<input className="edit-recipe-ingredients" defaultValue={this.props.recipe.ingredients}/><br/>
 						<button className="save">Save recipe</button>
 						<button className="cancel" onClick={this.handleCancel}>Cancel</button>
